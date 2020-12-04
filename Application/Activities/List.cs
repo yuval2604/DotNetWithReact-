@@ -17,9 +17,8 @@ namespace Application.Activities
         {
             private readonly DataContext _context;
             private readonly ILogger<List> _logger;
-            public Handler(DataContext context, ILogger<List> logger)
+            public Handler(DataContext context)
             {
-                this._logger = logger;
                 _context = context;
 
             }
@@ -27,18 +26,7 @@ namespace Application.Activities
             public async Task<List<Activity>> Handle(Query request,
                     CancellationToken cancellationToken)
             {
-                try
-                {
-                    for (var i = 0; i < 10; i++)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        await Task.Delay(1000, cancellationToken);
-                        _logger.LogInformation($"Task {i} has completed");
-                    }
-                }
-                catch(Exception ex) when(ex is TaskCanceledException) {
-                    _logger.LogInformation("Task was cancelled");
-                }
+            
                 var activities = await _context.Activities.ToListAsync(cancellationToken);
                 return activities;
                 }
